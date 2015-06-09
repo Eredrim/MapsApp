@@ -1,10 +1,16 @@
 package com.example.gilles.mapsapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.internal.widget.AdapterViewCompat;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +37,24 @@ public class PhotoListAdapter extends ArrayAdapter<MPhoto> {
         View listItemView = inflater.inflate(R.layout.list_item, parent, false);
         ((TextView) listItemView.findViewById(R.id.listTitle)).setText(lstPhotos.get(position).getNom());
         ((ImageView) listItemView.findViewById(R.id.listThumb)).setImageBitmap(lstPhotos.get(position).getThumnail(48));
+
+        listItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Changer de ville");
+                final EditText input = new EditText(getContext());
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(input);
+                builder.setPositiveButton("Go", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        boolean b = true;
+                    }
+                });
+                builder.show();
+            }
+        });
 
         return listItemView;
     }
