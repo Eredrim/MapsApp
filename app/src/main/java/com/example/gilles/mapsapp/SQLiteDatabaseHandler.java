@@ -123,7 +123,7 @@ public class SQLiteDatabaseHandler extends SQLiteOpenHelper {
         return id;
     }
 
-    public int update(MPhoto photo) {
+    public int update(MPhoto photo) { 
 
         SQLiteDatabase db = this.getWritableDatabase();
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
