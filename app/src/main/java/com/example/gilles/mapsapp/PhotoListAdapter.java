@@ -31,7 +31,7 @@ public class PhotoListAdapter extends ArrayAdapter<MPhoto> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         //return super.getView(position, convertView, parent);
         LayoutInflater inflater = (LayoutInflater) contexte.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View listItemView = inflater.inflate(R.layout.list_item, parent, false);
@@ -42,10 +42,10 @@ public class PhotoListAdapter extends ArrayAdapter<MPhoto> {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Changer de ville");
-                final EditText input = new EditText(getContext());
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
+                builder.setTitle(lstPhotos.get(position).getNom());
+                ImageView iv= new ImageView(getContext());
+                iv.setImageBitmap(lstPhotos.get(position).getThumnail(250));
+                builder.setView()
                 builder.setPositiveButton("Go", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
