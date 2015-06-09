@@ -9,4 +9,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_photo">Voir une photo</string>
     <string name="title_activity_list">Gallerie</string>
+    <string name="DateDialogList">Photo prise le\u00A0</string>
 </resources>

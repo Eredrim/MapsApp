@@ -178,9 +178,15 @@ public class MainActivity extends ActionBarActivity {
 
     public void cancelAndBackToMapView(View v){
         findViewById(R.id.llhidden).setVisibility(View.INVISIBLE);
+        //on vide les zones de texte
+        ((EditText) findViewById(R.id.tfNomPhoto)).setText("");
+        ((EditText) findViewById(R.id.tfComPhoto)).setText("");
+
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(EPSI, 15));
         File ftodelete = new File(lastPicturePath);
         ftodelete.delete();
+        ((EditText) findViewById(R.id.tfNomPhoto)).setText("");
+        ((EditText) findViewById(R.id.tfComPhoto)).setText("");
     }
 
     public void savePhoto(View v){
@@ -202,6 +208,9 @@ public class MainActivity extends ActionBarActivity {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(lastPhotoPos, 15));
         marker.showInfoWindow();
         findViewById(R.id.llhidden).setVisibility(View.INVISIBLE);
+        //on vide les zones de texte
+        ((EditText) findViewById(R.id.tfNomPhoto)).setText("");
+        ((EditText) findViewById(R.id.tfComPhoto)).setText("");
     }
 
 }
