@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MapsApp</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_main">PhotoMaps</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="hint_nomphoto">Nom de la photo</string>
+    <string name="hint_comphoto">Commentaire (facultatif)</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_photo">Voir une photo</string>
+    <string name="title_activity_list">Gallerie</string>
+</resources>

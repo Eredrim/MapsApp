@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.gilles.mapsapp.MainActivity">
+    <item android:id="@+id/action_photo"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_action_camera"
+        app:showAsAction="ifRoom"/>
+    <item android:id="@+id/action_liste"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_action_view_as_list"
+        app:showAsAction="ifRoom" />
+</menu>
