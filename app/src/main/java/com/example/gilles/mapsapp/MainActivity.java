@@ -1,8 +1,12 @@
 package com.example.gilles.mapsapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,9 +20,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -32,47 +38,39 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements LocationListener{
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_IMAGE_LIST = 2;
     static final LatLng EPSI = new LatLng(45.769769, 4.859136);
     static final LatLng TETEOR = new LatLng(45.773844, 4.856336);
-    private List<MPhoto> lstPhotos;
     private GoogleMap map;
+    private LocationManager locationManager;
     private String lastPicturePath;
     private HashMap<Marker, Long> markersMap = new HashMap<>();
+    private final SQLiteDatabaseHandler sqlDH = new SQLiteDatabaseHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
-                .getMap();
+        map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 //        Marker hamburg = map.addMarker(new MarkerOptions().position(EPSI)
 //                .title("EPSI Lyon"));
 //        Marker kiel = map.addMarker(new MarkerOptions()
 //                .position(TETEOR)
 //                .title("Parc de la tête d\'or")
 //                .snippet("c\'est cool"));
-        SQLiteDatabaseHandler sqlDH = new SQLiteDatabaseHandler(this);
         //sqlDH.getReadableDatabase();
-        try
-        {
-            lstPhotos = sqlDH.getAll();
-            for(MPhoto pict : lstPhotos){
-                Marker mark = map.addMarker(new MarkerOptions().position(new LatLng(pict.getLatitude(), pict.getLongitude())).title(pict.getNom()).snippet(pict.getCommentaire()));
-                markersMap.put(mark, pict.getId());
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
+        loadMarkers();
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 400, 1000, this);
 
 
         map.setMyLocationEnabled(true);
 
         // Move the camera instantly to hamburg with a zoom of 15.
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(EPSI, 15));
+        //map.moveCamera(CameraUpdateFactory.newLatLngZoom(EPSI, 15));
 
         // Zoom in, animating the camera.
         //map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
@@ -90,10 +88,39 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
+    public void onLocationChanged(Location location) {
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+        map.moveCamera(cameraUpdate);
+        locationManager.removeUpdates(this);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
     public void onDestroy(){
         //SQLiteDatabaseHandler sqlDH = new SQLiteDatabaseHandler(this);
         //sqlDH.deleteAll();
         super.onDestroy();
+    }
+
+    @Override
+    public void onResume(){
+        loadMarkers();
+        super.onResume();
     }
 
     @Override
@@ -119,6 +146,20 @@ public class MainActivity extends ActionBarActivity {
         else
         {
             return false;
+        }
+    }
+
+    public void loadMarkers(){
+        map.clear();
+        markersMap.clear();
+        try
+        {
+            for(MPhoto pict : sqlDH.getAll()){
+                Marker mark = map.addMarker(new MarkerOptions().position(new LatLng(pict.getLatitude(), pict.getLongitude())).title(pict.getNom()).snippet(pict.getCommentaire()));
+                markersMap.put(mark, pict.getId());
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 
@@ -201,7 +242,6 @@ public class MainActivity extends ActionBarActivity {
 
         MPhoto photo = new MPhoto(pnom, pcom, plati, plong, porient, lastPicturePath);
 
-        SQLiteDatabaseHandler sqlDH = new SQLiteDatabaseHandler(this);
         long photoId = sqlDH.insert(photo);
 
         LatLng lastPhotoPos = new LatLng(plati, plong);
