@@ -113,7 +113,6 @@ public class MainActivity extends ActionBarActivity {
         }
         else if(item.getItemId() == R.id.action_liste){
             Intent intent = new Intent(this, PhotoListActivity.class);
-//            intent.putParcelableArrayListExtra("lstPhotos", (ArrayList<? extends Parcelable>) lstPhotos);
             this.startActivityForResult(intent, REQUEST_IMAGE_LIST);
             return true;
         }

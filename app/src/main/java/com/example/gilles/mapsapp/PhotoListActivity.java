@@ -21,9 +21,6 @@ public class PhotoListActivity extends ActionBarActivity {
         setContentView(R.layout.activity_list);
         SQLiteDatabaseHandler sqlDH = new SQLiteDatabaseHandler(this);
 
-//        Intent intent = getIntent();
-//        List<MPhoto> lstPhotos = intent.getParcelableArrayListExtra("lstPhotos");
-//        ((ListView)findViewById(R.id.listView)).setAdapter(new PhotoListAdapter(this, lstPhotos));
         try {
             List<MPhoto> lstPhotos = sqlDH.getAll();
 

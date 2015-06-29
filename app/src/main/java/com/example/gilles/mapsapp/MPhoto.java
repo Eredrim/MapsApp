@@ -135,48 +135,4 @@ public class MPhoto {
         return filepath;
     }
 
-//    @Override
-//    public int describeContents() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public void writeToParcel(Parcel dest, int flags) {
-//        dest.writeLong(id);
-//        dest.writeString(nom);
-//        dest.writeString(commentaire);
-//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-//        dest.writeString(sdf.format(date));
-//        dest.writeDouble(latitude);
-//        dest.writeDouble(longitude);
-//        dest.writeFloat(orientation);
-//        dest.writeString(filepath);
-//    }
-//
-//    public static final Parcelable.Creator<MPhoto> CREATOR = new Parcelable.Creator<MPhoto>(){
-//        public MPhoto createFromParcel(Parcel in) {
-//            return new MPhoto(in);
-//        }
-//
-//        @Override
-//        public MPhoto[] newArray(int size) {
-//            return new MPhoto[size];
-//        }
-//    };
-//
-//    private MPhoto(Parcel in){
-//        id = in.readLong();
-//        nom = in.readString();
-//        commentaire = in.readString();
-//        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-//        try {
-//            date = sdf.parse(in.readString());
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        latitude = in.readDouble();
-//        longitude = in.readDouble();
-//        orientation = in.readFloat();
-//        filepath = in.readString();
-//    }
 }
