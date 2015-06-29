@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +37,7 @@ public class MainActivity extends ActionBarActivity {
     static final int REQUEST_IMAGE_LIST = 2;
     static final LatLng EPSI = new LatLng(45.769769, 4.859136);
     static final LatLng TETEOR = new LatLng(45.773844, 4.856336);
+    private List<MPhoto> lstPhotos;
     private GoogleMap map;
     private String lastPicturePath;
     private HashMap<Marker, Long> markersMap = new HashMap<>();
@@ -55,7 +58,7 @@ public class MainActivity extends ActionBarActivity {
         //sqlDH.getReadableDatabase();
         try
         {
-            List<MPhoto> lstPhotos = sqlDH.getAll();
+            lstPhotos = sqlDH.getAll();
             for(MPhoto pict : lstPhotos){
                 Marker mark = map.addMarker(new MarkerOptions().position(new LatLng(pict.getLatitude(), pict.getLongitude())).title(pict.getNom()).snippet(pict.getCommentaire()));
                 markersMap.put(mark, pict.getId());
@@ -110,6 +113,7 @@ public class MainActivity extends ActionBarActivity {
         }
         else if(item.getItemId() == R.id.action_liste){
             Intent intent = new Intent(this, PhotoListActivity.class);
+//            intent.putParcelableArrayListExtra("lstPhotos", (ArrayList<? extends Parcelable>) lstPhotos);
             this.startActivityForResult(intent, REQUEST_IMAGE_LIST);
             return true;
         }

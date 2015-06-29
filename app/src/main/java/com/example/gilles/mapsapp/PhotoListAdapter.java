@@ -1,9 +1,11 @@
 package com.example.gilles.mapsapp;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.internal.widget.AdapterViewCompat;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import java.util.List;
 public class PhotoListAdapter extends ArrayAdapter<MPhoto> {
     private List<MPhoto> lstPhotos;
     private Context contexte;
+    private final SQLiteDatabaseHandler sqldh = new SQLiteDatabaseHandler(getContext());
 
     public PhotoListAdapter(Context context, List<MPhoto> objects) {
         super(context, -1, objects);
@@ -57,11 +60,48 @@ public class PhotoListAdapter extends ArrayAdapter<MPhoto> {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(Intent.ACTION_SEND);
-                        Intent mailer = Intent.createChooser(intent, null);
-                        getContext().startActivity(mailer);
+                        intent.setType("text/email"); //nécessaire pour appeler les applications de type messagerie
+
+                        intent.putExtra(Intent.EXTRA_SUBJECT, "PhotoMaps - " + lstPhotos.get(position).getNom()); //sujet
+                        intent.putExtra(android.content.Intent.EXTRA_TEXT, lstPhotos.get(position).getCommentaire()); //texte du mail
+
+                        Uri uri = Uri.parse("file://" + lstPhotos.get(position).getFilepath());
+                        intent.putExtra(Intent.EXTRA_STREAM, uri); //pièce jointe
+
+                        getContext().startActivity(Intent.createChooser(intent, "Send email"));
                     }
                 });
                 builder.show();
+            }
+        });
+
+        listItemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Supprimer la photo ?");
+                builder.setMessage("Voulez vous vraiment supprimer la photo \"" + lstPhotos.get(position).getNom() + "\"");
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        lstPhotos.get(position).deleteFile();
+                        sqldh.delete(lstPhotos.get(position));
+
+                        //on refresh l'activité
+//                        ((Activity) contexte).finish();
+//                        contexte.startActivity(((Activity) contexte).getIntent());
+
+                        lstPhotos.remove(position);
+                        notifyDataSetChanged();
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+
+                builder.show();
+                return true;
             }
         });
 

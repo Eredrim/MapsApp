@@ -10,4 +10,6 @@
     <string name="title_activity_photo">Voir une photo</string>
     <string name="title_activity_list">Gallerie</string>
     <string name="DateDialogList">Photo prise le\u00A0</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Annuler</string>
 </resources>
