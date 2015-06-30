@@ -23,8 +23,19 @@ public class PhotoListActivity extends ActionBarActivity {
 
         try {
             List<MPhoto> lstPhotos = sqlDH.getAll();
-
-            ((ListView)findViewById(R.id.listView)).setAdapter(new PhotoListAdapter(this, lstPhotos));
+            final PhotoListAdapter pLstAd = new PhotoListAdapter(PhotoListActivity.this, lstPhotos);
+            ((ListView) findViewById(R.id.listView)).setAdapter(pLstAd);
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    findViewById(R.id.listView).post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            ((ListView) findViewById(R.id.listView)).setAdapter(pLstAd);
+//                        }
+//                    });
+//                }
+//            });
         } catch (ParseException e) {
             e.printStackTrace();
         }

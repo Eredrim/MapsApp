@@ -75,7 +75,6 @@ public class MPhoto {
     }
 
     public Bitmap getThumnail(int thumSize){
-
         Bitmap img = BitmapFactory.decodeFile(filepath);
         Bitmap bmp = ThumbnailUtils.extractThumbnail(img, thumSize, thumSize);
 

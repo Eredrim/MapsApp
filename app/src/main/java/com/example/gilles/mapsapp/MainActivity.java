@@ -1,6 +1,8 @@
 package com.example.gilles.mapsapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,7 +44,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_IMAGE_LIST = 2;
     static final LatLng EPSI = new LatLng(45.769769, 4.859136);
-    static final LatLng TETEOR = new LatLng(45.773844, 4.856336);
     private GoogleMap map;
     private LocationManager locationManager;
     private String lastPicturePath;
@@ -54,26 +55,14 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-//        Marker hamburg = map.addMarker(new MarkerOptions().position(EPSI)
-//                .title("EPSI Lyon"));
-//        Marker kiel = map.addMarker(new MarkerOptions()
-//                .position(TETEOR)
-//                .title("Parc de la tête d\'or")
-//                .snippet("c\'est cool"));
-        //sqlDH.getReadableDatabase();
 
         loadMarkers();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 400, 1000, this);
 
 
         map.setMyLocationEnabled(true);
-
-        // Move the camera instantly to hamburg with a zoom of 15.
-        //map.moveCamera(CameraUpdateFactory.newLatLngZoom(EPSI, 15));
-
-        // Zoom in, animating the camera.
-        //map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
 
         map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -119,6 +108,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     @Override
     public void onResume(){
+        testLocationEnabled();
         loadMarkers();
         super.onResume();
     }
@@ -174,8 +164,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                 photoFile = createImageFile();
             } catch (IOException ex) {
                 ex.printStackTrace();
-                //Toast.makeText(this, "erreur d\'ecriture", Toast.LENGTH_LONG).show();
-                // Error occurred while creating the File
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
@@ -226,7 +214,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         ((EditText) findViewById(R.id.tfNomPhoto)).setText("");
         ((EditText) findViewById(R.id.tfComPhoto)).setText("");
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(EPSI, 15));
+        //map.moveCamera(CameraUpdateFactory.newLatLngZoom(EPSI, 15));
         File ftodelete = new File(lastPicturePath);
         ftodelete.delete();
         ((EditText) findViewById(R.id.tfNomPhoto)).setText("");
@@ -254,6 +242,27 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         //on vide les zones de texte
         ((EditText) findViewById(R.id.tfNomPhoto)).setText("");
         ((EditText) findViewById(R.id.tfComPhoto)).setText("");
+    }
+
+    private void testLocationEnabled() {
+        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Cette application est basée sur les services de localisation");
+            builder.setCancelable(false);
+            builder.setPositiveButton("Je les active", new DialogInterface.OnClickListener() {
+                public void onClick(final DialogInterface dialog, final int id) {
+                    dialog.cancel();
+                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                }
+            });
+            builder.setNegativeButton("Je quitte l\'appli", new DialogInterface.OnClickListener() {
+                public void onClick(final DialogInterface dialog, final int id) {
+                    finish();
+                }
+            });
+            final AlertDialog alert = builder.create();
+            alert.show();
+        }
     }
 
 }
